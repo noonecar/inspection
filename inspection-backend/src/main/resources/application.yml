@@ -1,0 +1,68 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+# spring:
+#   datasource:
+#     url: ${DB_URL:jdbc:mysql://localhost:3306/inspection?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&connectionCollation=utf8mb4_unicode_ci&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true}
+#     username: ${DB_USERNAME:root}
+#     password: ${DB_PASSWORD:159357wl}
+#     driver-class-name: com.mysql.cj.jdbc.Driver
+#   jackson:
+#     date-format: yyyy-MM-dd HH:mm:ss
+#     time-zone: Asia/Shanghai
+#   # sql:
+#   #   init:
+#   #     mode: ${SQL_INIT_MODE:always} # 注意避免每次启动执行建表/导数
+#   #     encoding: UTF-8
+#   #     schema-locations: classpath:db/schema.sql # 注意避免覆盖远程库结构
+#   #     data-locations: classpath:db/data.sql # 注意避免重复导入初始化数据
+
+#远程数据库配置
+spring:
+  application:
+    name: Radio
+  datasource:
+    url: jdbc:mysql://47.109.84.104:3306/radio_analysis?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: shared_user
+    password: Az!12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000 # 连接池优化，应对网络波动
+  # sql:
+  #   init:
+  #     mode: ${SQL_INIT_MODE:always} # 注意避免每次启动执行建表/导数
+  #     encoding: UTF-8
+  #     schema-locations: classpath:db/schema.sql # 注意避免覆盖远程库结构
+  #     data-locations: classpath:db/data.sql # 注意避免重复导入初始化数据
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui
+
+app:
+  upload:
+    dir: ${APP_UPLOAD_DIR:uploads}
+  regulation:
+    policy-doc-path: ${APP_REGULATION_POLICY_DOC_PATH:}
+    policy-doc-classpath: ${APP_REGULATION_POLICY_DOC_CLASSPATH:docs/台站核查.md}
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+    allowed-origin-patterns: ${APP_CORS_ALLOWED_ORIGIN_PATTERNS:http://*.cpolar.top,http://*.cpolar.cn,https://*.cpolar.top,https://*.cpolar.cn}
+  jwt:
+    secret: ${APP_JWT_SECRET:a8F3kL9vQ2mZ7rX5tP1sD6hY0cB4nE3u}
+    expire-ms: ${APP_JWT_EXPIRE_MS:86400000}
+
+

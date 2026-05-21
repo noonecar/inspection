@@ -1,0 +1,25 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Wrapper Bootstrap
+# ----------------------------------------------------------------------------
+
+MAVEN_PROJECTBASEDIR="${MAVEN_BASEDIR:-$(cd "$(dirname "$0")"; pwd)}"
+
+WRAPPER_DIR="$MAVEN_PROJECTBASEDIR/.mvn/wrapper"
+WRAPPER_JAR="$WRAPPER_DIR/maven-wrapper.jar"
+WRAPPER_PROPERTIES="$WRAPPER_DIR/maven-wrapper.properties"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+  if [ -n "$(command -v curl)" ]; then
+    curl -fsSL -o "$WRAPPER_JAR" "https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
+  elif [ -n "$(command -v wget)" ]; then
+    wget -O "$WRAPPER_JAR" "https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
+  else
+    echo "Error: curl or wget required to download Maven Wrapper jar." >&2
+    exit 1
+  fi
+fi
+
+JAVA_CMD="java"
+
+exec "$JAVA_CMD" -Dmaven.multiModuleProjectDirectory="$MAVEN_PROJECTBASEDIR" -cp "$WRAPPER_JAR" org.apache.maven.wrapper.MavenWrapperMain "$@"

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn compile *)",
+      "Bash(./mvnw.cmd -q compile -DskipTests)",
+      "Bash(npm run *)",
+      "Bash(python -c ' *)",
+      "Bash(python fix_freq_usage.py)",
+      "Bash(mysql -h localhost -u root -p159357wl -e \"USE inspection; SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE user_institution; TRUNCATE TABLE sys_user; TRUNCATE TABLE institution; TRUNCATE TABLE radio_station; TRUNCATE TABLE inspection_task; TRUNCATE TABLE frequency_usage; TRUNCATE TABLE inspection_record; TRUNCATE TABLE warning_record; TRUNCATE TABLE warning_history; TRUNCATE TABLE statistics_report; TRUNCATE TABLE operation_log; TRUNCATE TABLE task_history; TRUNCATE TABLE ground_frequency_records; TRUNCATE TABLE satellite_frequency_records; TRUNCATE TABLE satellite_network_records; TRUNCATE TABLE ground_station_records; TRUNCATE TABLE space_station_records; TRUNCATE TABLE satellite_earth_station_records; TRUNCATE TABLE inspection_standard; TRUNCATE TABLE regulation; TRUNCATE TABLE regulation_clause; SET FOREIGN_KEY_CHECKS=1;\")",
+      "Bash(mysql -h localhost -u root -p159357wl -e \"USE inspection; source d:/inspection/inspection-backend/src/main/resources/db/data.sql;\")",
+      "Bash(mysql -h localhost -u root -p159357wl -e \"USE inspection; SELECT 'radio_station' as tbl, COUNT\\(*\\) as cnt FROM radio_station UNION ALL SELECT 'inspection_task', COUNT\\(*\\) FROM inspection_task UNION ALL SELECT 'inspection_record', COUNT\\(*\\) FROM inspection_record UNION ALL SELECT 'warning_record', COUNT\\(*\\) FROM warning_record UNION ALL SELECT 'sys_user', COUNT\\(*\\) FROM sys_user UNION ALL SELECT 'frequency_usage', COUNT\\(*\\) FROM frequency_usage UNION ALL SELECT 'institution', COUNT\\(*\\) FROM institution UNION ALL SELECT 'inspection_standard', COUNT\\(*\\) FROM inspection_standard UNION ALL SELECT 'regulation', COUNT\\(*\\) FROM regulation UNION ALL SELECT 'regulation_clause', COUNT\\(*\\) FROM regulation_clause UNION ALL SELECT 'statistics_report', COUNT\\(*\\) FROM statistics_report UNION ALL SELECT 'warning_history', COUNT\\(*\\) FROM warning_history UNION ALL SELECT 'user_institution', COUNT\\(*\\) FROM user_institution;\")",
+      "Bash(mysql -h localhost -u root -p159357wl -e \"USE inspection; SELECT COUNT\\(*\\) as task_count, MIN\\(station_id\\) as min_sid, MAX\\(station_id\\) as max_sid FROM inspection_task WHERE station_id IS NOT NULL;\")",
+      "Bash(mysql -h localhost -u root -p159357wl -e \"USE inspection; SELECT 'ground_frequency' as tbl, COUNT\\(*\\) as cnt FROM ground_frequency_records UNION ALL SELECT 'satellite_frequency', COUNT\\(*\\) FROM satellite_frequency_records UNION ALL SELECT 'satellite_network', COUNT\\(*\\) FROM satellite_network_records UNION ALL SELECT 'ground_station', COUNT\\(*\\) FROM ground_station_records UNION ALL SELECT 'space_station', COUNT\\(*\\) FROM space_station_records UNION ALL SELECT 'satellite_earth_station', COUNT\\(*\\) FROM satellite_earth_station_records;\")",
+      "Bash(mysql -h 47.109.84.104 -u shared_user -p'Az!12345678' radio_analysis -e \"SELECT MAX\\(id\\) as max_inst_id FROM institution; SELECT MAX\\(id\\) as max_user_id FROM sys_user; SELECT MAX\\(id\\) as max_ui_id FROM user_institution; SELECT COUNT\\(*\\) as inst_count FROM institution; SELECT COUNT\\(*\\) as user_count FROM sys_user WHERE role='INSPECTOR';\")",
+      "Bash(\"/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql\" -h 47.109.84.104 -u shared_user -p'Az!12345678' radio_analysis)",
+      "Bash(\"/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql\" -h 47.109.84.104 -u shared_user -p'Az!12345678' radio_analysis -e \"UPDATE institution SET province = '四川省' WHERE id <= 21;\")",
+      "Bash(awk '{print length\\($0\\)-2, $0}')",
+      "Bash(\"/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql\" -h 47.109.84.104 -u shared_user -p'Az!12345678' --default-character-set=utf8mb4 radio_analysis -e \"INSERT INTO institution \\(id, name, province, city, created_at, updated_at\\) VALUES \\(22,'北京市无线电监测站','北京市','北京市','2026-05-15 10:00:00','2026-05-15 10:00:00'\\);\")",
+      "Bash(\"/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql\" -h 47.109.84.104 -u shared_user -p'Az!12345678' --default-character-set=utf8mb4 radio_analysis)",
+      "Bash(\"/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql\" -h 47.109.84.104 -u shared_user -p'Az!12345678' radio_analysis -e \"DELETE FROM institution WHERE id >= 22; DELETE FROM sys_user WHERE id >= 50; DELETE FROM user_institution WHERE id >= 43;\")",
+      "Bash(NODE_PATH=/d/inspection/inspection-web/node_modules node -e ' *)",
+      "Bash(NODE_PATH=/d/inspection/inspection-web/node_modules node scripts/generate-institution-data.js 21 49 42)",
+      "Bash(awk -F\"'\" '{print $2}')",
+      "Bash(grep -oE \"'[a-z]+'\\\\,'{noop}'\" d:/inspection/scripts/generated-institution-data.sql)",
+      "Bash(sed \"s/'//g\")",
+      "Bash('/d/Program Files/MySQL/MySQL Server 8.0/bin/mysql' -h 47.109.84.104 -u shared_user -pAz!12345678 radio_analysis -e ' *)"
+    ]
+  }
+}

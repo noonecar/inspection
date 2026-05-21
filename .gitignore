@@ -1,0 +1,57 @@
+# Java/Maven
+inspection-backend/target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# Spring/IntelliJ/VS Code
+.spring-boot-devtools.properties
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Node/Vite
+inspection-web/node_modules/
+inspection-web/dist/
+inspection-web/.vite/
+inspection-web/.eslintcache
+inspection-web/npm-debug.log*
+inspection-web/yarn-debug.log*
+inspection-web/yarn-error.log*
+inspection-web/pnpm-debug.log*
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+
+# Docs (exclude all files under docs)
+docs/
+
+# Logs and temp files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+
+# Coverage/test reports
+coverage/
+*.lcov
+reports/
+
+# Local env files
+.env
+.env.*
+
+# Uploaded files
+inspection-backend/uploads/

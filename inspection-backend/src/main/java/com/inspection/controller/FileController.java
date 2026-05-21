@@ -1,0 +1,54 @@
+package com.inspection.controller;
+
+import com.inspection.common.result.ApiResponse;
+import jakarta.annotation.security.RolesAllowed;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/files")
+public class FileController {
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
+
+    @PostMapping("/upload")
+    @RolesAllowed({"ADMIN", "OPERATOR", "INSPECTOR"})
+    public ApiResponse<Map<String, String>> upload(@RequestParam("file") MultipartFile file,
+                                                    @RequestParam(name = "category", defaultValue = "evidence") String category) throws IOException {
+        String original = StringUtils.hasText(file.getOriginalFilename()) ? file.getOriginalFilename() : "file.dat";
+        String extension = "";
+        int dotIndex = original.lastIndexOf('.');
+        if (dotIndex >= 0) {
+            extension = original.substring(dotIndex);
+        }
+        String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                + "-" + UUID.randomUUID().toString().replace("-", "") + extension;
+
+        Path dir = Paths.get(uploadDir, category);
+        Files.createDirectories(dir);
+        Path target = dir.resolve(fileName);
+        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+
+        String relativeUrl = "/uploads/" + category + "/" + fileName;
+        Map<String, String> data = new HashMap<>();
+        data.put("url", relativeUrl);
+        data.put("name", original);
+        return ApiResponse.ok("上传成功", data);
+    }
+}
