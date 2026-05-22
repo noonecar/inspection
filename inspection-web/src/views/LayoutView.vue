@@ -5,7 +5,7 @@
         <span>无线电监督检查</span>
         <el-button size="small" text class="custom-btn" @click="openCustomize">菜单定制</el-button>
       </div>
-      <el-menu :default-active="active" router class="menu">
+      <el-menu :default-active="active" class="menu" @select="handleMenuSelect">
         <el-sub-menu index="fav" v-if="favoriteItems.length">
           <template #title>收藏夹</template>
           <el-menu-item
@@ -21,9 +21,11 @@
           :key="item.path"
           :index="item.path"
           class="menu-item"
+          :class="{ 'item-external': item.external }"
         >
           <span class="menu-label-wrapper">
             <span>{{ item.label }}</span>
+            <span v-if="item.external" class="external-indicator">↗</span>
             <span v-if="item.path === '/inspection' && inspectionBadgeCount > 0" class="inline-red-dot" />
           </span>
           <el-icon class="fav-icon" @click.stop="toggleFavorite(item)">
@@ -142,7 +144,8 @@ const menuItems = ref([
   { label: '违规预警', path: '/warning', roles: ['ADMIN', 'OPERATOR', 'INSPECTOR'] },
   { label: '统计报表', path: '/report', roles: ['ADMIN', 'OPERATOR', 'INSPECTOR'] },
   { label: '法规标准', path: '/regulation', roles: ['ADMIN', 'OPERATOR', 'INSPECTOR'] },
-  { label: '操作日志', path: '/operation-log', roles: ['ADMIN', 'OPERATOR'] }
+  { label: '操作日志', path: '/operation-log', roles: ['ADMIN', 'OPERATOR'] },
+  { label: '分析子系统', path: '/analysis-dashboard', external: true, url: 'http://47.109.84.104/dashboard', roles: ['ADMIN', 'OPERATOR'] }
 ])
 
 const role = computed(() => auth.user?.role || 'OPERATOR')
@@ -276,6 +279,15 @@ const saveCustomize = () => {
   menuOrder.value = order
   localStorage.setItem(storageKey('menuOrder'), JSON.stringify(order))
   customizeVisible.value = false
+}
+
+const handleMenuSelect = (index) => {
+  const item = menuItems.value.find(item => item.path === index)
+  if (item?.external) {
+    window.open(item.url, '_blank')
+    return
+  }
+  router.push(index)
 }
 
 const inspectionBadgeCount = ref(0)
@@ -614,6 +626,17 @@ const handleLogout = () => {
 .fav-icon {
   font-size: 14px;
   color: #94a3b8;
+}
+
+.external-indicator {
+  font-size: 12px;
+  margin-left: 4px;
+  opacity: 0.7;
+  color: var(--el-color-primary-light-3, #a5b4fc);
+}
+
+.item-external {
+  opacity: 0.85;
 }
 
 .sidebar-footer {
