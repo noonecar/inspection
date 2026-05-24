@@ -156,10 +156,6 @@
             <template v-if="item.status !== '已处理'">{{ item.message }}</template>
             <template v-else><span style="color: #c0c4cc; font-style: italic">该预警已处理，详细内容已归档</span></template>
           </p>
-          <p style="margin: 0; color: #909399; font-size: 12px">
-            <template v-if="item.status !== '已处理'">规则：{{ item.ruleName }}</template>
-            <template v-else><span style="color: #c0c4cc">预警规则已归档</span></template>
-          </p>
         </el-timeline-item>
       </el-timeline>
       <el-empty v-else description="暂无变更记录" />
@@ -398,11 +394,7 @@ const resolveWarningItem = async (row) => {
 }
 
 const openHistory = async (row) => {
-  if (!row.relatedTaskId) {
-    ElMessage.warning('该预警未关联任务，无法查看历史')
-    return
-  }
-  const res = await fetchWarningHistory(row.relatedTaskId)
+  const res = await fetchWarningHistory(row.id)
   if (res.success) {
     historyData.value = res.data || []
   }

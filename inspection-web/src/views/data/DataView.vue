@@ -273,7 +273,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { createFrequency, deleteFrequency, exportFrequencies, fetchFrequencies, importFrequenciesCsv, reviewFrequencies, updateFrequency } from '../../api/frequencies'
 import { createStation, deleteStation, exportStations, fetchStations, importStationsCsv, reviewStations, updateStation } from '../../api/stations'
 import { useAuthStore } from '../../stores/auth'
@@ -558,9 +558,14 @@ const saveStation = async () => {
 }
 
 const removeStation = async (id) => {
-  await deleteStation(id)
-  ElMessage.success('删除成功')
-  loadStations()
+  try {
+    await ElMessageBox.confirm('确定删除该台站吗？', '确认删除', { type: 'warning' })
+    await deleteStation(id)
+    ElMessage.success('删除成功')
+    loadStations()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 const importStations = async (fileObj) => {
@@ -654,9 +659,14 @@ const saveFrequency = async () => {
 }
 
 const removeFrequency = async (id) => {
-  await deleteFrequency(id)
-  ElMessage.success('删除成功')
-  loadFrequencies()
+  try {
+    await ElMessageBox.confirm('确定删除该频率使用记录吗？', '确认删除', { type: 'warning' })
+    await deleteFrequency(id)
+    ElMessage.success('删除成功')
+    loadFrequencies()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 const importFrequencies = async (fileObj) => {

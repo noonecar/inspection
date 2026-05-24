@@ -119,11 +119,11 @@ public class WarningController {
         return ApiResponse.ok("预警已标记为已处理", null);
     }
 
-    @GetMapping("/history/{taskId}")
+    @GetMapping("/history/{warningId}")
     @RolesAllowed({"ADMIN", "OPERATOR", "INSPECTOR"})
-    public ApiResponse<List<WarningHistory>> getHistoryByTask(@PathVariable("taskId") Long taskId) {
+    public ApiResponse<List<WarningHistory>> getHistoryByWarning(@PathVariable("warningId") Long warningId) {
         List<WarningHistory> history = warningHistoryService.lambdaQuery()
-                .eq(WarningHistory::getRelatedTaskId, taskId)
+                .eq(WarningHistory::getWarningId, warningId)
                 .orderByDesc(WarningHistory::getCreatedAt)
                 .list();
         return ApiResponse.ok(history);

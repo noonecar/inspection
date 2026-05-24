@@ -240,7 +240,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { createRegulation, deleteRegulation, fetchRegulations, updateRegulation } from '../../api/regulations'
 import {
   createInspectionStandard,
@@ -676,9 +676,14 @@ const saveRegulation = async () => {
 }
 
 const removeRegulation = async (id) => {
-  await deleteRegulation(id)
-  ElMessage.success('删除成功')
-  loadRegulations()
+  try {
+    await ElMessageBox.confirm('确定删除该法规吗？', '确认删除', { type: 'warning' })
+    await deleteRegulation(id)
+    ElMessage.success('删除成功')
+    loadRegulations()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 const openClauseDialog = (row) => {

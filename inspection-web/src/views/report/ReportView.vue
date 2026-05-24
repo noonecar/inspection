@@ -135,7 +135,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue'
 import * as echarts from 'echarts'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { createReport, deleteReport, exportReport, fetchReportDetail, fetchReportStats, fetchReports } from '../../api/reports'
@@ -333,9 +333,14 @@ const save = async () => {
 }
 
 const remove = async (id) => {
-  await deleteReport(id)
-  ElMessage.success('删除成功')
-  loadReports()
+  try {
+    await ElMessageBox.confirm('确定删除该报表记录吗？', '确认删除', { type: 'warning' })
+    await deleteReport(id)
+    ElMessage.success('删除成功')
+    loadReports()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 const formatSnapshot = (snapshot) => {

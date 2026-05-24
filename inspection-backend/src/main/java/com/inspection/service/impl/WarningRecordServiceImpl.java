@@ -84,9 +84,9 @@ public class WarningRecordServiceImpl extends ServiceImpl<WarningRecordMapper, W
         if (record == null) {
             return;
         }
-        saveHistorySnapshot(record);
         record.setStatus("已处理");
         updateById(record);
+        saveHistorySnapshot(record);
     }
 
     @Override
@@ -97,5 +97,8 @@ public class WarningRecordServiceImpl extends ServiceImpl<WarningRecordMapper, W
             saveHistorySnapshot(existing);
         }
         updateById(record);
+        if (existing != null) {
+            saveHistorySnapshot(record);
+        }
     }
 }

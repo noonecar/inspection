@@ -86,7 +86,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteOperationLog, fetchOperationLogs, fetchOperationLogSummary } from '../../api/operationLogs'
 import { useAuthStore } from '../../stores/auth'
 
@@ -151,10 +151,15 @@ const reset = () => {
 }
 
 const remove = async (id) => {
-  await deleteOperationLog(id)
-  ElMessage.success('删除成功')
-  await load()
-  await loadSummary()
+  try {
+    await ElMessageBox.confirm('确定删除该操作日志吗？', '确认删除', { type: 'warning' })
+    await deleteOperationLog(id)
+    ElMessage.success('删除成功')
+    await load()
+    await loadSummary()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 onMounted(async () => {

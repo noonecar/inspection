@@ -660,9 +660,14 @@ const handleExport = async () => {
 }
 
 const remove = async (id) => {
-  await deleteTask(id)
-  ElMessage.success('删除成功')
-  load()
+  try {
+    await ElMessageBox.confirm('确定删除该任务吗？', '确认删除', { type: 'warning' })
+    await deleteTask(id)
+    ElMessage.success('删除成功')
+    load()
+  } catch (e) {
+    // 用户取消
+  }
 }
 
 const openHistory = async (row) => {
