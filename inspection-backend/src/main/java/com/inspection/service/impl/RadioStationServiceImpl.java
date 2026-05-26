@@ -34,6 +34,14 @@ public class RadioStationServiceImpl extends ServiceImpl<RadioStationMapper, Rad
 	@Override
 	public RadioStation createStation(RadioStation station) throws BusinessException {
 		validateStation(station, null);
+		// 自动生成 station_id（从 1001 开始递增），仅在前端未传入时生成
+		if (station.getStationId() == null) {
+			RadioStation last = lambdaQuery()
+					.orderByDesc(RadioStation::getStationId)
+					.last("LIMIT 1")
+					.one();
+			station.setStationId(last == null ? 1001L : last.getStationId() + 1);
+		}
 		save(station);
 		return station;
 	}

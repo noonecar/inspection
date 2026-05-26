@@ -56,5 +56,5 @@ reports/
 # Uploaded files
 inspection-backend/uploads/
 
-#db
-inspection-backend\src\main\resources\db
+# DB schema and data
+inspection-backend/src/main/resources/db/
