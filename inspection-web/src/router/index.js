@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useAuthStore } from '../stores/auth'
 import LoginView from '../views/LoginView.vue'
 import LayoutView from '../views/LayoutView.vue'
@@ -49,6 +50,7 @@ router.beforeEach((to) => {
   }
   const roles = to.meta?.roles
   if (roles && !roles.includes(auth.user?.role || 'OPERATOR')) {
+    ElMessage.warning('暂无权限访问该模块')
     return '/dashboard'
   }
   return true

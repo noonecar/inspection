@@ -70,7 +70,7 @@ public class InspectionDetailController {
         if (task == null) {
             throw new EntityNotFoundException("任务不存在");
         }
-        if (isInspector() && !currentUsername().equals(task.getAssignee())) {
+        if (isInspector() && !taskService.isInspectorAssigned(task.getAssignee(), currentUsername())) {
             throw new BusinessException("检查员只能查看分配给自己的任务明细");
         }
 
@@ -123,7 +123,7 @@ public class InspectionDetailController {
         if (task == null) {
             throw new EntityNotFoundException("任务不存在");
         }
-        if (isInspector() && !currentUsername().equals(task.getAssignee())) {
+        if (isInspector() && !taskService.isInspectorAssigned(task.getAssignee(), currentUsername())) {
             throw new BusinessException("检查员只能录入分配给自己的任务明细");
         }
 

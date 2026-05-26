@@ -1,7 +1,11 @@
 package com.inspection.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.inspection.common.result.ApiResponse;
 import com.inspection.common.security.JwtAuthenticationFilter;
 import com.inspection.common.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +41,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> {})
+                .anonymous(anon -> anon.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/", "/error",
@@ -47,6 +55,20 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui", "/swagger-ui/**").permitAll()
                     .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        String json = objectMapper.writeValueAsString(ApiResponse.fail("未登录或Token已失效"));
+                        response.getWriter().write(json);
+                    })
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        String json = objectMapper.writeValueAsString(ApiResponse.fail("无权限访问"));
+                        response.getWriter().write(json);
+                    })
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

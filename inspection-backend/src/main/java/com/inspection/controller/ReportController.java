@@ -53,7 +53,7 @@ public class ReportController {
     public ApiResponse<Map<String, Object>> overview() {
         Map<String, Object> data = new HashMap<>();
         if (isInspector()) {
-            List<Long> taskIds = taskService.lambdaQuery().eq(InspectionTask::getAssignee, currentUsername()).list().stream().map(InspectionTask::getId).toList();
+            List<Long> taskIds = taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", currentUsername()).list().stream().map(InspectionTask::getId).toList();
             if (taskIds.isEmpty()) {
                 data.put("taskCount", 0);
                 data.put("recordCount", 0);
@@ -181,7 +181,7 @@ public class ReportController {
                         return true;
                     }
                     InspectionTask task = taskMap.get(item.getTaskId());
-                    return task != null && currentUsername().equals(task.getAssignee());
+                    return task != null && taskService.isInspectorAssigned(task.getAssignee(), currentUsername());
                 })
                 .toList();
 
@@ -205,13 +205,13 @@ public class ReportController {
         Set<Long> regionFilteredTaskIds;
         if (region != null && !region.isBlank()) {
             regionFilteredTaskIds = taskMap.values().stream()
-                .filter(task -> !isInspector() || currentUsername().equals(task.getAssignee()))
+                .filter(task -> !isInspector() || taskService.isInspectorAssigned(task.getAssignee(), currentUsername()))
                 .filter(task -> isTaskInRegion(task, stationMap, region))
                 .map(InspectionTask::getId)
                 .collect(Collectors.toCollection(HashSet::new));
         } else {
             regionFilteredTaskIds = taskMap.values().stream()
-                .filter(task -> !isInspector() || currentUsername().equals(task.getAssignee()))
+                .filter(task -> !isInspector() || taskService.isInspectorAssigned(task.getAssignee(), currentUsername()))
                 .map(InspectionTask::getId)
                 .collect(Collectors.toCollection(HashSet::new));
         }

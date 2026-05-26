@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS inspection_task (
   station_id BIGINT COMMENT '关联台站ID（逻辑关联radio_station.station_id）',
   station_ids JSON COMMENT '关联台站ID列表（多站任务）',
   status VARCHAR(32) NOT NULL COMMENT '任务状态（待审核/进行中/已完成/已取消）',
-  inspector VARCHAR(64) COMMENT '责任人员/执行人账号（PC下发给APP执行）',
+  inspector VARCHAR(255) COMMENT '责任人员/执行人账号（PC下发给APP执行，逗号分隔支持多人）',
   due_date DATE COMMENT '任务截止日期',
   reminded_at DATETIME COMMENT '最近一次催办时间',
   cancel_reason VARCHAR(255) COMMENT '任务撤销原因',

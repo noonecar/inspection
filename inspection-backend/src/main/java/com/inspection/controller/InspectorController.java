@@ -109,13 +109,7 @@ public class InspectorController {
 
         // 该检查员分配到的所有任务（assignee字段可能包含逗号分隔的多个检查员）
         List<InspectionTask> tasks = taskService.lambdaQuery()
-                .eq(InspectionTask::getAssignee, username)
-                .or()
-                .like(InspectionTask::getAssignee, "," + username + ",")
-                .or()
-                .like(InspectionTask::getAssignee, username + ",")
-                .or()
-                .like(InspectionTask::getAssignee, "," + username)
+                .apply("FIND_IN_SET({0}, inspector) > 0", username)
                 .orderByDesc(InspectionTask::getId)
                 .list();
 

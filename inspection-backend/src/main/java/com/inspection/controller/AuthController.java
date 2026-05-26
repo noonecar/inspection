@@ -49,11 +49,15 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ApiResponse<Map<String, Object>> me() throws BusinessException {
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ApiResponse<Map<String, Object>> me() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ApiResponse.fail("未登录或Token已失效");
+        }
+        String username = (String) auth.getPrincipal();
         SysUser user = userService.lambdaQuery().eq(SysUser::getUsername, username).one();
         if (user == null) {
-            throw new BusinessException("用户不存在或已禁用");
+            return ApiResponse.fail("用户不存在或已禁用");
         }
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());

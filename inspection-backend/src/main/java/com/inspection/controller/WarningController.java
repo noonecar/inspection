@@ -63,7 +63,7 @@ public class WarningController {
 
         if (isInspector()) {
             List<Long> taskIds = taskService.lambdaQuery()
-                    .eq(InspectionTask::getAssignee, currentUsername())
+                    .apply("FIND_IN_SET({0}, inspector) > 0", currentUsername())
                     .list()
                     .stream()
                     .map(InspectionTask::getId)
@@ -135,7 +135,7 @@ public class WarningController {
         List<WarningRecord> records;
         if (isInspector()) {
             List<Long> taskIds = taskService.lambdaQuery()
-                    .eq(InspectionTask::getAssignee, currentUsername())
+                    .apply("FIND_IN_SET({0}, inspector) > 0", currentUsername())
                     .list()
                     .stream()
                     .map(InspectionTask::getId)

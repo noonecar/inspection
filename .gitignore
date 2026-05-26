@@ -55,3 +55,6 @@ reports/
 
 # Uploaded files
 inspection-backend/uploads/
+
+#db
+inspection-backend\src\main\resources\db

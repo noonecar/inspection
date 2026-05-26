@@ -97,7 +97,7 @@ public class InspectionRecordController {
 
         if (isInspector()) {
             List<Long> assignedTaskIds = taskService.lambdaQuery()
-                    .eq(InspectionTask::getAssignee, currentUsername())
+                    .apply("FIND_IN_SET({0}, inspector) > 0", currentUsername())
                     .list()
                     .stream()
                     .map(InspectionTask::getId)
@@ -183,7 +183,7 @@ public class InspectionRecordController {
         }
         if (isInspector()) {
             InspectionTask task = taskService.getById(record.getTaskId());
-            if (task == null || !currentUsername().equals(task.getAssignee())) {
+            if (task == null || !taskService.isInspectorAssigned(task.getAssignee(), currentUsername())) {
                 return ApiResponse.ok(List.of());
             }
         }
@@ -352,7 +352,7 @@ public class InspectionRecordController {
         List<InspectionRecord> list;
         if (isInspector()) {
             List<Long> assignedTaskIds = taskService.lambdaQuery()
-                    .eq(InspectionTask::getAssignee, currentUsername())
+                    .apply("FIND_IN_SET({0}, inspector) > 0", currentUsername())
                     .list()
                     .stream()
                     .map(InspectionTask::getId)
@@ -420,7 +420,7 @@ public class InspectionRecordController {
             return false;
         }
         InspectionTask task = taskService.getById(taskId);
-        return task != null && currentUsername().equals(task.getAssignee());
+        return task != null && taskService.isInspectorAssigned(task.getAssignee(), currentUsername());
     }
 
     private void recordTaskCompletionHistory(Long taskId, String description) {

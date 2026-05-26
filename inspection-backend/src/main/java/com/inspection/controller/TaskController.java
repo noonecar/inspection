@@ -93,7 +93,7 @@ public class TaskController {
         }
 
         if (isInspector()) {
-            wrapper.eq(InspectionTask::getAssignee, currentUsername());
+            taskService.applyInspectorFilter(wrapper, currentUsername());
         }
 
         List<InspectionTask> list = taskService.list(wrapper.orderByDesc(InspectionTask::getId));
@@ -310,25 +310,25 @@ public class TaskController {
         String username = currentUsername();
         boolean inspector = isInspector();
         long total = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).count()
             : taskService.count();
         long ongoing = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).eq(InspectionTask::getStatus, TaskStatus.IN_PROGRESS.getLabel()).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).eq(InspectionTask::getStatus, TaskStatus.IN_PROGRESS.getLabel()).count()
             : taskService.lambdaQuery().eq(InspectionTask::getStatus, TaskStatus.IN_PROGRESS.getLabel()).count();
         long reviewing = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).eq(InspectionTask::getStatus, TaskStatus.PENDING_REVIEW.getLabel()).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).eq(InspectionTask::getStatus, TaskStatus.PENDING_REVIEW.getLabel()).count()
             : taskService.lambdaQuery().eq(InspectionTask::getStatus, TaskStatus.PENDING_REVIEW.getLabel()).count();
         long completed = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).eq(InspectionTask::getStatus, TaskStatus.COMPLETED.getLabel()).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).eq(InspectionTask::getStatus, TaskStatus.COMPLETED.getLabel()).count()
             : taskService.lambdaQuery().eq(InspectionTask::getStatus, TaskStatus.COMPLETED.getLabel()).count();
         long canceled = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).eq(InspectionTask::getStatus, TaskStatus.CANCELLED.getLabel()).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).eq(InspectionTask::getStatus, TaskStatus.CANCELLED.getLabel()).count()
             : taskService.lambdaQuery().eq(InspectionTask::getStatus, TaskStatus.CANCELLED.getLabel()).count();
         long pendingReinspection = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username).eq(InspectionTask::getStatus, TaskStatus.PENDING_REINSPECTION.getLabel()).count()
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username).eq(InspectionTask::getStatus, TaskStatus.PENDING_REINSPECTION.getLabel()).count()
             : taskService.lambdaQuery().eq(InspectionTask::getStatus, TaskStatus.PENDING_REINSPECTION.getLabel()).count();
         long remindedToday = inspector
-            ? taskService.lambdaQuery().eq(InspectionTask::getAssignee, username)
+            ? taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", username)
                 .ge(InspectionTask::getRemindedAt, LocalDateTime.now().toLocalDate().atStartOfDay()).count()
             : taskService.lambdaQuery().ge(InspectionTask::getRemindedAt, LocalDateTime.now().toLocalDate().atStartOfDay()).count();
 
@@ -348,7 +348,7 @@ public class TaskController {
     public void exportProgress(HttpServletResponse response) throws IOException {
         List<InspectionTask> list;
         if (isInspector()) {
-            list = taskService.lambdaQuery().eq(InspectionTask::getAssignee, currentUsername()).orderByDesc(InspectionTask::getId).list();
+            list = taskService.lambdaQuery().apply("FIND_IN_SET({0}, inspector) > 0", currentUsername()).orderByDesc(InspectionTask::getId).list();
         } else {
             list = taskService.lambdaQuery().orderByDesc(InspectionTask::getId).list();
         }
