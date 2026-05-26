@@ -284,7 +284,7 @@ const saveCustomize = () => {
 const handleMenuSelect = (index) => {
   const item = menuItems.value.find(item => item.path === index)
   if (item?.external) {
-    window.open(item.url, '_blank')
+    window.location.href = item.url
     return
   }
   router.push(index)
