@@ -38,7 +38,7 @@
         <div class="footer-line">举报电话：123-123-123</div>
         <div class="footer-line">
           举报网址：
-          <a class="footer-link" href="https://www.tsinghua.edu.cn/">jubao.com</a>
+          <a class="footer-link" href="https://www.gov.cn/">jubao.com</a>
         </div>
         <div class="footer-line">©2026 wl All rights reserved</div>
       </div>
