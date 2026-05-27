@@ -48,8 +48,8 @@
       <el-table-column prop="inspector" label="检查员" width="110">
         <template #default="scope">{{ scope.row.inspectorDisplay || scope.row.inspector || '' }}</template>
       </el-table-column>
-      <el-table-column label="检查时间" width="170">
-        <template #default="scope">{{ formatDateTime(scope.row.checkedAt) }}</template>
+      <el-table-column label="检查时间" width="110">
+        <template #default="scope">{{ formatDateOnly(scope.row.checkedAt) }}</template>
       </el-table-column>
       <el-table-column label="材料" min-width="240">
         <template #default="scope">
