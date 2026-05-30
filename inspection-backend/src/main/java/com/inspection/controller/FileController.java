@@ -56,8 +56,8 @@ public class FileController {
     }
 
     @GetMapping("/view/{category}/{filename:.+}")
-    public void viewFile(@PathVariable String category,
-                          @PathVariable String filename,
+    public void viewFile(@PathVariable("category") String category,
+                          @PathVariable("filename") String filename,
                           HttpServletResponse response) throws IOException {
         Path file = Paths.get(uploadDir, category, filename);
         if (!Files.exists(file)) {
