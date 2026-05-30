@@ -15,6 +15,10 @@ export default defineConfig({
       '/api': {               // 拦截所有以 /api 开头的请求
         target: 'http://localhost:8080',  // SpringBoot 后端地址
         changeOrigin: true,   // 解决跨域
+      },
+      '/uploads': {            // 代理上传文件访问
+        target: 'http://localhost:8080',
+        changeOrigin: true,
       }
     }
   }

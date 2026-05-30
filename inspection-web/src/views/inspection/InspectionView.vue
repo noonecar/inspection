@@ -766,7 +766,11 @@ const splitEvidenceUrls = (value) => {
 const resolveFileUrl = (url) => {
   if (!url) return '#'
   if (/^https?:\/\//i.test(url)) return url
-  return `http://localhost:8080${url.startsWith('/') ? '' : '/'}${url}`
+  // 通过 /api/files/view/ 路径访问文件，该路径会被 nginx 代理到后端
+  if (url.startsWith('/uploads/')) {
+    return url.replace('/uploads/', '/api/files/view/')
+  }
+  return url
 }
 
 const extractFileName = (url) => {

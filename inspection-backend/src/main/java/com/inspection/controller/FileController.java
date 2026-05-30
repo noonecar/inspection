@@ -2,8 +2,11 @@ package com.inspection.controller;
 
 import com.inspection.common.result.ApiResponse;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +53,23 @@ public class FileController {
         data.put("url", relativeUrl);
         data.put("name", original);
         return ApiResponse.ok("上传成功", data);
+    }
+
+    @GetMapping("/view/{category}/{filename:.+}")
+    public void viewFile(@PathVariable String category,
+                          @PathVariable String filename,
+                          HttpServletResponse response) throws IOException {
+        Path file = Paths.get(uploadDir, category, filename);
+        if (!Files.exists(file)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        String contentType = Files.probeContentType(file);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+        response.setContentType(contentType);
+        Files.copy(file, response.getOutputStream());
+        response.getOutputStream().flush();
     }
 }
